@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?
+  accounts      Account[]
+  Session       Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Account {
+  userId   String  @id
+  title    String?
+  fullname String?
+  image    String? @default("https://res.cloudinary.com/dlpkoketm/image/upload/v1721035472/linkedin-clone/avatar-default_xgonmt.jpg")
+  cover    String? @default("https://res.cloudinary.com/dlpkoketm/image/upload/v1721035472/linkedin-clone/defaultCover_jwmslu.png")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  posts    Post[]
+  likes    Likes[]
+  Comments Comments[]
+
+  @@map("accounts")
+}
+
+model Session {
+  userId      String   @id
+  accessToken String   @unique
+  expires     DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Post {
+  id       String  @id @default(cuid())
+  text     String?
+  media    Media[]
+  likes    Int     @default(0)
+  comments Int     @default(0)
+  isLiked  Boolean @default(false)
+  authorId String
+  author   Account @relation(fields: [authorId], references: [userId])
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Likes     Likes[]
+  Comments  Comments[]
+
+  @@map("posts")
+}
+
+model Media {
+  id     String @id @default(cuid())
+  postId String
+  url    String
+  type   String
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("media")
+}
+
+model Likes {
+  id        String   @id @default(cuid())
+  postId    String
+  authorId  String
+  author    Account  @relation(fields: [authorId], references: [userId])
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("likes")
+}
+
+model Comments {
+  id        String   @id @default(cuid())
+  postId    String
+  authorId  String
+  text      String
+  author    Account  @relation(fields: [authorId], references: [userId])
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comments")
+}
