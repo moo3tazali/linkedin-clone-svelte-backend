@@ -37,8 +37,7 @@ const corsHandle: Handle = async ({ event, resolve }) => {
 			return new Response(null, {
 				headers: {
 					'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-					'Access-Control-Allow-Origin':
-						'https://66960bba47c83b232b60be50--strong-toffee-76b322.netlify.app',
+					'Access-Control-Allow-Origin': 'https://linkedinclone-test.netlify.app',
 					'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 					'Access-Control-Allow-Credentials': 'true',
 					'Access-Control-Max-Age': '86400' // Cache the preflight response for 24 hours
@@ -52,7 +51,7 @@ const corsHandle: Handle = async ({ event, resolve }) => {
 	if (event.url.pathname.startsWith('/api')) {
 		response.headers.append(
 			'Access-Control-Allow-Origin',
-			`https://66960bba47c83b232b60be50--strong-toffee-76b322.netlify.app`
+			`https://linkedinclone-test.netlify.app`
 		);
 		response.headers.append('Access-Control-Allow-Credentials', 'true');
 	}
