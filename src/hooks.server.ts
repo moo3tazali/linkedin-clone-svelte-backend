@@ -37,7 +37,7 @@ const corsHandle: Handle = async ({ event, resolve }) => {
 			return new Response(null, {
 				headers: {
 					'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
-					'Access-Control-Allow-Origin': 'https://moo3tazali.github.io/linkedin-clone',
+					'Access-Control-Allow-Origin': 'https://moo3tazali.github.io',
 					'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 					'Access-Control-Allow-Credentials': 'true',
 					'Access-Control-Max-Age': '86400' // Cache the preflight response for 24 hours
@@ -49,10 +49,7 @@ const corsHandle: Handle = async ({ event, resolve }) => {
 
 	const response = await resolve(event);
 	if (event.url.pathname.startsWith('/api')) {
-		response.headers.append(
-			'Access-Control-Allow-Origin',
-			`https://moo3tazali.github.io/linkedin-clone`
-		);
+		response.headers.append('Access-Control-Allow-Origin', `https://moo3tazali.github.io`);
 		response.headers.append('Access-Control-Allow-Credentials', 'true');
 	}
 	return response;
